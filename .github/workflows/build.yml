@@ -20,3 +20,7 @@ jobs:
       with:
         name: Package
         path: released
+    - name: Upload to GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: released/*.jar
