@@ -25,3 +25,4 @@ jobs:
       with:
         files: released/*.jar
         name: latest
+        tag_name: latest
