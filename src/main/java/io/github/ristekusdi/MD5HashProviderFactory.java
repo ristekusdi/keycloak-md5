@@ -1,4 +1,4 @@
-package com.msalmi;
+package io.github.ristekusdi;
 
 import org.keycloak.Config.Scope;
 import org.keycloak.credential.hash.PasswordHashProvider;

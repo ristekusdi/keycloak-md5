@@ -3,8 +3,8 @@ Add MD5 hashing support to Keycloak.
 
 ## Requirements
 
-- Java 11
-- Maven 3.9.6
+- Java 21
+- Maven 3.9.9
 
 ## Building
 

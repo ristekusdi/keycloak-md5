@@ -1,4 +1,4 @@
-package com.msalmi;
+package io.github.ristekusdi;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

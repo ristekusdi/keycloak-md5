@@ -1,4 +1,4 @@
-package com.msalmi;
+package io.github.ristekusdi;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
