@@ -2,6 +2,7 @@ package io.github.ristekusdi;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import org.keycloak.credential.hash.PasswordHashProvider;
 import org.keycloak.models.PasswordPolicy;
@@ -26,19 +27,6 @@ public class MD5HashProvider implements PasswordHashProvider {
 
 	@Override
 	public PasswordCredentialModel encodedCredential(String rawPassword, int iterations) {
-		String encodedPassword = this.encode(rawPassword, iterations);
-		return PasswordCredentialModel.createFromValues(this.providerId, new byte[0], iterations, encodedPassword);
-	}
-
-	@Override
-	public boolean verify(String rawPassword, PasswordCredentialModel credential) {
-		String encodedPassword = this.encode(rawPassword, credential.getPasswordCredentialData().getHashIterations());
-		String hash = credential.getPasswordSecretData().getValue();
-		return encodedPassword.equals(hash);
-	}
-
-	@Override
-	public String encode(String rawPassword, int iterations) {
 		try {
 			MessageDigest md = MessageDigest.getInstance(this.providerId);
 			md.update(rawPassword.getBytes());
@@ -47,12 +35,19 @@ public class MD5HashProvider implements PasswordHashProvider {
 			var aux = new BigInteger(1, md.digest());
 
 			// convert BigInteger to 32-char lowercase string using leading 0s
-			return String.format("%032x", aux);
-		} catch (Exception e) {
-			// fail silently
+			String encodedPassword = String.format("%032x", aux);
+			return PasswordCredentialModel.createFromValues(this.providerId, new byte[0], iterations, encodedPassword);
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException("Error encoding password: " + e.getMessage(), e);
 		}
+	}
 
-		return null;
+	@Override
+	public boolean verify(String rawPassword, PasswordCredentialModel credential) {
+		String encodedPassword = encodedCredential(rawPassword, credential.getPasswordCredentialData().getHashIterations())
+			.getPasswordSecretData().getValue();
+		String hash = credential.getPasswordSecretData().getValue();
+		return encodedPassword.equals(hash);
 	}
 
 }
